@@ -1,8 +1,15 @@
 import sys
 
-from PySide2.QtCore import QRegExp
-from PySide2.QtGui import QColor, QFont, QSyntaxHighlighter, QTextCharFormat
-from PySide2.QtWidgets import QApplication, QPlainTextEdit
+try:
+    from PySide6.QtCore import QRegularExpression
+    from PySide6.QtGui import QColor, QFont, QSyntaxHighlighter, QTextCharFormat
+    from PySide6.QtWidgets import QApplication, QPlainTextEdit
+    USE_QREGEXP = False
+except ImportError:
+    from PySide2.QtCore import QRegExp
+    from PySide2.QtGui import QColor, QFont, QSyntaxHighlighter, QTextCharFormat
+    from PySide2.QtWidgets import QApplication, QPlainTextEdit
+    USE_QREGEXP = True
 
 import sexparser
 
@@ -125,9 +132,13 @@ class SexHighlighter(QSyntaxHighlighter):
             (r"'[^'\\]*(\\.[^'\\]*)*'", 0, STYLES['string']),
         ]
 
-        # Build a QRegExp for each pattern
-        self.rules = [(QRegExp(pat), index, fmt)
-            for (pat, index, fmt) in rules]
+        # Build a QRegExp/QRegularExpression for each pattern
+        if USE_QREGEXP:
+            self.rules = [(QRegExp(pat), index, fmt)
+                for (pat, index, fmt) in rules]
+        else:
+            self.rules = [(QRegularExpression(pat), index, fmt)
+                for (pat, index, fmt) in rules]
 
 
     def highlightBlock(self, text):
@@ -135,13 +146,19 @@ class SexHighlighter(QSyntaxHighlighter):
         """
         # Do other syntax formatting
         for expression, nth, format in self.rules:
-            index = expression.indexIn(text, 0)
-
-            while index >= 0:
-                # We actually want the index of the nth match
-                index = expression.pos(nth)
-                length = len(expression.cap(nth))
-                self.setFormat(index, length, format)
-                index = expression.indexIn(text, index + length)
+            if USE_QREGEXP:
+                index = expression.indexIn(text, 0)
+                while index >= 0:
+                    index = expression.pos(nth)
+                    length = len(expression.cap(nth))
+                    self.setFormat(index, length, format)
+                    index = expression.indexIn(text, index + length)
+            else:
+                match = expression.match(text)
+                while match.hasMatch():
+                    index = match.capturedStart(nth)
+                    length = len(match.captured(nth))
+                    self.setFormat(index, length, format)
+                    match = expression.match(text, match.capturedEnd())
 
         self.setCurrentBlockState(0)

@@ -1,9 +1,15 @@
 import sys
 
-from PySide2.QtCore import Qt, Signal, QRect, QSize
-from PySide2.QtGui import QFont, QTextCursor, QTextOption, QColor, QPainter, QTextFormat
-from PySide2.QtWidgets import (QApplication, QCompleter, QHBoxLayout,
-                               QLineEdit, QPlainTextEdit, QWidget)
+try:
+    from PySide6.QtCore import Qt, Signal, QRect, QSize
+    from PySide6.QtGui import QFont, QTextCursor, QTextOption, QColor, QPainter, QTextFormat
+    from PySide6.QtWidgets import (QApplication, QCompleter, QHBoxLayout,
+                                   QLineEdit, QPlainTextEdit, QWidget)
+except ImportError:
+    from PySide2.QtCore import Qt, Signal, QRect, QSize
+    from PySide2.QtGui import QFont, QTextCursor, QTextOption, QColor, QPainter, QTextFormat
+    from PySide2.QtWidgets import (QApplication, QCompleter, QHBoxLayout,
+                                   QLineEdit, QPlainTextEdit, QWidget)
 
 class QLineNumberArea(QWidget):
     def __init__(self, editor):
@@ -169,15 +175,13 @@ class CodeEditor(QPlainTextEdit):
 
     def keyPressEvent(self, event):
         if self.completer and self.completer.popup() and self.completer.popup().isVisible():
-            if event.key() in (
-            Qt.Key_Enter,
-            Qt.Key_Return,
-            Qt.Key_Escape,
-            Qt.Key_Tab,
-            Qt.Key_Backtab
-            ):
+            if event.key() in (Qt.Key_Escape, Qt.Key_Tab, Qt.Key_Backtab):
                 event.ignore()
-                #print("Event ignored")
+                return
+            if event.key() in (Qt.Key_Enter, Qt.Key_Return):
+                self.completer.popup().hide()
+                event.accept()
+                QPlainTextEdit.keyPressEvent(self, event)
                 return
 
         text_cursor = self.textCursor()

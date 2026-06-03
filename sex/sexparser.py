@@ -1,5 +1,4 @@
 import ast
-import imp
 import re
 import os
 
@@ -65,6 +64,7 @@ function_node_map = {
     "exp": ("sbs::function::exp", ["a"]),
     "log2": ("sbs::function::log2", ["a"]),
     "pow2": ("sbs::function::pow2", ["a"]),
+    "pow": ("sbs::function::pow", ["a", "b"]),
     "lerp": ("sbs::function::lerp", ["a", "b", "x"]),
     "min": ("sbs::function::min", ["a", "b"]),
     "max": ("sbs::function::max", ["a", "b"]),
@@ -200,6 +200,7 @@ class NodeCreator:
         self.keywords.append(output_variable_name)
         self.keywords.append(export_function_name)
         self.keywords.append(declare_inputs_function_name)
+        self.keywords.append(sequence_function_name)
         self.keywords.append("True")
         self.keywords.append("False")
         self.main_window = None

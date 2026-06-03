@@ -6,8 +6,12 @@ import json
 
 from functools import partial
 from time import gmtime, strftime
-from PySide2.QtGui import QFont, QIcon
-from PySide2.QtWidgets import QApplication, QMainWindow, QToolBar
+try:
+    from PySide6.QtGui import QFont, QIcon
+    from PySide6.QtWidgets import QApplication, QMainWindow, QToolBar
+except ImportError:
+    from PySide2.QtGui import QFont, QIcon
+    from PySide2.QtWidgets import QApplication, QMainWindow, QToolBar
 
 sys.path.append(os.path.dirname(__file__))
 

@@ -8,12 +8,20 @@
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide2.QtCore import (QCoreApplication, QMetaObject, QObject, QPoint,
-    QRect, QSize, QUrl, Qt)
-from PySide2.QtGui import (QBrush, QColor, QConicalGradient, QCursor, QFont,
-    QFontDatabase, QIcon, QLinearGradient, QPalette, QPainter, QPixmap,
-    QRadialGradient)
-from PySide2.QtWidgets import *
+try:
+    from PySide6.QtCore import (QCoreApplication, QMetaObject, QObject, QPoint,
+        QRect, QSize, QUrl, Qt)
+    from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor, QFont,
+        QFontDatabase, QIcon, QLinearGradient, QPalette, QPainter, QPixmap,
+        QRadialGradient)
+    from PySide6.QtWidgets import *
+except ImportError:
+    from PySide2.QtCore import (QCoreApplication, QMetaObject, QObject, QPoint,
+        QRect, QSize, QUrl, Qt)
+    from PySide2.QtGui import (QBrush, QColor, QConicalGradient, QCursor, QFont,
+        QFontDatabase, QIcon, QLinearGradient, QPalette, QPainter, QPixmap,
+        QRadialGradient)
+    from PySide2.QtWidgets import *
 
 from codeeditor import CodeEditor
 
@@ -98,4 +106,3 @@ class Ui_MainWindow(object):
         self.tabs.setTabText(self.tabs.indexOf(self.render_tab), QCoreApplication.translate("MainWindow", u"  View Generated Code  ", None))
         self.compile.setText(QCoreApplication.translate("MainWindow", u"COMPILE", None))
     # retranslateUi
-
