@@ -6,6 +6,8 @@ import json
 
 from functools import partial
 from time import gmtime, strftime
+from importlib import reload
+
 try:
     from PySide6.QtGui import QFont, QIcon
     from PySide6.QtWidgets import QApplication, QMainWindow, QToolBar
@@ -265,6 +267,10 @@ class SexToolBar(QToolBar):
         act.triggered.connect(self.open_sex_window)
 
     def open_sex_window(self):
+        reload(codeeditor)
+        reload(sexeditor)
+        reload(sexsyntax)
+        reload(sexparser)
         parser.import_functions("functions.sbs", app)
         parser.import_current_graph_functions(app)
 

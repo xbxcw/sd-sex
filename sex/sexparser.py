@@ -834,3 +834,4 @@ class NodeCreator:
                         self.main_window.console_message(f"Warning: Unused variable [{node_var_name}] (declared at line {node_var_line})")
 
                 self.graph.deleteNode(created_node)
+
